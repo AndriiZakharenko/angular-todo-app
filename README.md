@@ -1,1 +1,3 @@
-# angular-todo-app
+# Angular Todo App
+
+in progress...
