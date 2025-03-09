@@ -4,10 +4,8 @@
   <div class="todoapp__content">
 
     <header class="todoapp__header">
-      <!-- this button should have `active` class only if all todos are completed -->
       <button type="button" class="todoapp__toggle-all active"></button>
 
-      <!-- Add a todo on form submit -->
       <form>
         <input type="text" class="todoapp__new-todo" placeholder="What needs to be done?" />
       </form>
@@ -15,7 +13,6 @@
 
     <section class="todoapp__main">
 
-      <!-- This is a completed todo -->
       <div
       class="todo"
       [class.completed]="todo.completed"
@@ -36,7 +33,6 @@
         <ng-template #titleBlock>
           <span class="todo__title">{{ todo.title }}</span>
 
-          <!-- Remove button appears only on hover -->
           <button class="todo__remove" (click)="todos.splice(i, 1)">x</button>
         </ng-template>
 
@@ -47,13 +43,11 @@
       </div>
     </section>
 
-    <!-- Hide the footer if there are no todos -->
     <footer class="todoapp__footer">
       <span class="todo-count">
-        3 items left
+        {{ activeTodos.length }} items left
       </span>
 
-      <!-- Active link should have the 'selected' class -->
       <nav class="filter">
         <a href="#/" class="filter__link selected">
           All
@@ -68,7 +62,6 @@
         </a>
       </nav>
 
-      <!-- this button should be disabled if there are no completed todos -->
       <button type="button" class="todoapp__clear-completed">
         Clear completed
       </button>
