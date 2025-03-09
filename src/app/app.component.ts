@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 // import { RouterOutlet } from '@angular/router';
 
 const todos = [
@@ -20,7 +21,7 @@ interface Todo {
 @Component({
   selector: 'app-root',
   // imports: [RouterOutlet],
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
