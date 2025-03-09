@@ -18,7 +18,10 @@
         <ng-template #titleBlock>
           <span class="todo__title">{{ todo.title }}</span>
 
-          <button class="todo__remove">x</button>
+          <button
+          class="todo__remove"
+          (click)="delete.emit()"
+          >x</button>
         </ng-template>
 
         <div class="modal overlay" [class.is-active]="false">
