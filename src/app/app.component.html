@@ -24,8 +24,7 @@
           <input
           type="checkbox"
           class="todo__status"
-          [checked]="todo.completed"
-          (change)="handleTodoToggle($event, todo)"
+          [(ngModel)]="todo.completed"
           />
         </label>
 
