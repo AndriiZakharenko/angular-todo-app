@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-// import { RouterOutlet } from '@angular/router';
 
 const todos = [
   { id: 1, title: 'HTML', completed: true },
@@ -17,10 +16,8 @@ interface Todo {
   title: string;
   completed: boolean;
 }
-
 @Component({
   selector: 'app-root',
-  // imports: [RouterOutlet],
   imports: [CommonModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -29,7 +26,7 @@ export class AppComponent {
   editing = false;
   todos = todos;
 
-  handleTodoToggle(event: Event, todo: Todo){
-    todo.completed = (event.target as HTMLInputElement).checked
+  get activeTodos(){
+    return this.todos.filter(todo => !todo.completed)
   }
 }
