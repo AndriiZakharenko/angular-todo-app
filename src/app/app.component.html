@@ -5,82 +5,42 @@
 
     <header class="todoapp__header">
       <!-- this button should have `active` class only if all todos are completed -->
-      <button
-        type="button"
-        class="todoapp__toggle-all active"
-      ></button>
+      <button type="button" class="todoapp__toggle-all active"></button>
 
       <!-- Add a todo on form submit -->
       <form>
-        <input
-          type="text"
-          class="todoapp__new-todo"
-          placeholder="What needs to be done?"
-        />
+        <input type="text" class="todoapp__new-todo" placeholder="What needs to be done?" />
       </form>
     </header>
 
     <section class="todoapp__main">
 
       <!-- This is a completed todo -->
-      <div class="todo completed">
+      <div
+      class="todo"
+      [class.completed]="todo.completed"
+      *ngFor="let todo of todos">
         <label class="todo__status-label">
           <input type="checkbox" class="todo__status" checked />
         </label>
 
-        <span class="todo__title">Completed Todo</span>
+        <form *ngIf="editing; else titleBlock">
+          <input type="text" class="todo__title-field" placeholder="Empty todo will be deleted"
+            value="Todo is being edited now" />
+        </form>
 
-        <!-- Remove button appears only on hover -->
-        <button class="todo__remove">x</button>
+        <ng-template #titleBlock>
+          <span class="todo__title">{{ todo.title }}</span>
 
-        <div class="modal overlay">
+          <!-- Remove button appears only on hover -->
+          <button class="todo__remove">x</button>
+        </ng-template>
+
+        <div class="modal overlay" [class.is-active]="false">
           <div class="modal-background has-background-white-ter"></div>
           <div class="loader"></div>
         </div>
       </div>
-
-      <!-- This todo is an active todo -->
-      <div class="todo">
-        <label class="todo__status-label">
-          <input type="checkbox" class="todo__status" />
-        </label>
-
-        <span class="todo__title">
-          Not Completed Todo
-        </span>
-
-
-        <!-- Remove button appears only on hover -->
-        <button type="button" class="todo__remove">×</button>
-      </div>
-
-      <!-- This todo is being edited -->
-      <div class="todo">
-        <label class="todo__status-label">
-          <input type="checkbox" class="todo__status" />
-        </label>
-
-        <!-- This form is shown instead of the title and remove button -->
-        <form>
-          <input type="text" class="todo__title-field" placeholder="Empty todo will be deleted"
-            value="Todo is being edited now" />
-        </form>
-      </div>
-
-      <!-- This todo is in loadind state -->
-      <div class="todo">
-        <label class="todo__status-label">
-          <input type="checkbox" class="todo__status" />
-        </label>
-
-        <span class="todo__title">
-          Todo is being saved now
-        </span>
-
-        <button type="button" class="todo__remove">×</button>
-      </div>
-
-
     </section>
 
     <!-- Hide the footer if there are no todos -->
@@ -90,7 +50,7 @@
       </span>
 
       <!-- Active link should have the 'selected' class -->
-      <nav class="filter" >
+      <nav class="filter">
         <a href="#/" class="filter__link selected">
           All
         </a>
