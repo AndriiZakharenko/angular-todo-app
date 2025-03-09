@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Todo } from '../../types/todo';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -10,8 +10,12 @@ import { CommonModule } from '@angular/common';
   styleUrl: './todo.component.scss'
 })
 export class TodoComponent {
-  @Input()
-todo!: Todo;
+  @Output()
+    delete = new EventEmitter()
 
-editing = false;
+
+  @Input()
+    todo!: Todo;
+
+  editing = false;
 }
