@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 const todos = [
   { id: 1, title: 'HTML', completed: true },
@@ -18,31 +18,43 @@ interface Todo {
 }
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
   editing = false;
   todos = todos;
-  title = "";
+  todoForm = new FormGroup({
+    title: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.minLength(3)
+      ]
+    })
+  })
+
+  get title(){
+    return this.todoForm.get('title') as FormControl
+  }
 
   get activeTodos(){
     return this.todos.filter(todo => !todo.completed)
   }
 
   addTodo(){
-    if(!this.title){
+    if(this.todoForm.invalid){
       return
     }
     
     const newTodo: Todo = {
       id: Date.now(),
-      title: this.title,
+      title: this.title.value,
       completed: false
     }
 
     this.todos.push(newTodo)
-    this.title = ""
+    this.todoForm.reset()
   }
 }
