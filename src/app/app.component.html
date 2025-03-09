@@ -6,8 +6,14 @@
     <header class="todoapp__header">
       <button type="button" class="todoapp__toggle-all active"></button>
 
-      <form>
-        <input type="text" class="todoapp__new-todo" placeholder="What needs to be done?" />
+      <form (ngSubmit)="addTodo()">
+        <input
+        type="text"
+        class="todoapp__new-todo"
+        placeholder="What needs to be done?"
+        name="title"
+        [(ngModel)]="title"
+        />
       </form>
     </header>
 
