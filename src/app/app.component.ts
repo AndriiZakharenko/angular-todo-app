@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TodoComponent } from "./components/todo/todo.component";
+import { Todo } from './types/todo';
 
 const todos = [
   { id: 1, title: 'HTML', completed: true },
@@ -10,20 +12,14 @@ const todos = [
   { id: 5, title: 'Vue', completed: false },
   { id: 6, title: 'Angular', completed: false },
 ];
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-}
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TodoComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  editing = false;
+  
   todos = todos;
   todoForm = new FormGroup({
     title: new FormControl('', {
