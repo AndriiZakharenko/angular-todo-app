@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Todo } from '../../types/todo';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -7,7 +7,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-todo',
   imports: [CommonModule, FormsModule],
   templateUrl: './todo.component.html',
-  styleUrl: './todo.component.scss'
+  styleUrl: './todo.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoComponent implements OnChanges {
   @Output()

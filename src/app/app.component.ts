@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component} from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TodoComponent } from "./components/todo/todo.component";
 import { Todo } from './types/todo';
@@ -17,8 +17,9 @@ const todos = [
   imports: [CommonModule, FormsModule, ReactiveFormsModule, TodoComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit{
+export class AppComponent{
   
   todos = todos;
   todoForm = new FormGroup({
@@ -36,14 +37,8 @@ export class AppComponent implements OnInit{
   }
 
   get activeTodos(){
+    console.log('calc')
     return this.todos.filter(todo => !todo.completed)
-  }
-
-  constructor(){}
-  ngOnInit(): void {
-    setTimeout(() => {
-      this.todos[1] = { ...this.todos[1], title: "qwerty" }
-    }, 3000)
   }
 
   trackById(i: number, todo: Todo){
