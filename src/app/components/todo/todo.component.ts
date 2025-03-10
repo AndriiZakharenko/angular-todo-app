@@ -14,6 +14,12 @@ export class TodoComponent implements OnChanges {
   @Output()
   delete = new EventEmitter<void>();
 
+  @Output()
+  toggle = new EventEmitter();
+
+  @Output()
+  rename = new EventEmitter<string>();
+
   @Input()
   todo!: Todo;
 
@@ -29,7 +35,6 @@ export class TodoComponent implements OnChanges {
 
   constructor(){}
   ngOnChanges({ todo }: SimpleChanges): void {
-    console.log(todo.previousValue?.title)
     if(todo.currentValue.title !== todo.previousValue?.title){
       this.title = todo.currentValue.title
     }
@@ -46,7 +51,7 @@ export class TodoComponent implements OnChanges {
       return
     }
     this.editing = false
-    this.todo.title =  this.title
+    this.rename.emit(this.title)
   }
 
 }

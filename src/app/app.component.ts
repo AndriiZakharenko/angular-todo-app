@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component} from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TodoComponent } from "./components/todo/todo.component";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { TodoComponent } from './components/todo/todo.component';
 import { Todo } from './types/todo';
 
 const todos = [
@@ -17,46 +23,71 @@ const todos = [
   imports: [CommonModule, FormsModule, ReactiveFormsModule, TodoComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent{
-  
+export class AppComponent {
   todos = todos;
   todoForm = new FormGroup({
     title: new FormControl('', {
       nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.minLength(3)
-      ]
-    })
-  })
+      validators: [Validators.required, Validators.minLength(3)],
+    }),
+  });
 
-  get title(){
-    return this.todoForm.get('title') as FormControl
+  get title() {
+    return this.todoForm.get('title') as FormControl;
   }
 
-  get activeTodos(){
-    console.log('calc')
-    return this.todos.filter(todo => !todo.completed)
+  get activeTodos() {
+    return this.todos.filter((todo) => !todo.completed);
   }
 
-  trackById(i: number, todo: Todo){
-    return todo.id
+  trackById(i: number, todo: Todo) {
+    return todo.id;
   }
 
-  addTodo(){
-    if(this.todoForm.invalid){
-      return
+  handleFormSubmit() {
+    if (this.todoForm.invalid) {
+      return;
     }
-    
+
+    this.addTodo(this.title.value)
+    this.todoForm.reset();
+  }
+
+  addTodo(newTitle: string){
     const newTodo: Todo = {
       id: Date.now(),
-      title: this.title.value,
-      completed: false
-    }
+      title: newTitle,
+      completed: false,
+    };
 
-    this.todos.push(newTodo)
-    this.todoForm.reset()
+    this.todos = [ ...this.todos, newTodo ];
   }
+
+  toggleTodo(todoId: number){
+    this.todos = this.todos.map(todo => {
+      if(todo.id !== todoId){
+        return todo
+      }
+
+      return { ... todo, completed: !todo.completed }
+    })
+  }
+
+  renameTodo(todoId: number, title: string){
+    this.todos = this.todos.map(todo => {
+      if(todo.id !== todoId){
+        return todo
+      }
+
+      return { ... todo, title }
+    })
+  }
+
+  deleteTodo(todoId: number){
+    this.todos = this.todos.filter(todo => todo.id !== todoId)
+
+  }
+
 }
