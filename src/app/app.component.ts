@@ -3,15 +3,14 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TodoComponent } from './components/todo/todo.component';
 import { Todo } from './types/todo';
 import { TodoFormComponent } from "./components/todo-form/todo-form.component";
-import { todosFromServer } from './data/todosFromServer';
-import { FilterActivePipe } from './pipes/filter-active.pipe';
+import { TodosService } from './services/todos.service';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, TodoComponent, TodoFormComponent, FilterActivePipe],
+  imports: [CommonModule, TodoComponent, TodoFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   _todos: Todo[] = [];
@@ -30,10 +29,15 @@ export class AppComponent implements OnInit {
     this.activeTodos = this._todos.filter((todo) => !todo.completed)
   }
 
-  constructor(){}
+  constructor(
+    private todosServices: TodosService
+  ){}
+
   ngOnInit(): void {
-    this.todos = todosFromServer
-  }
+    this.todosServices.getTodos().subscribe((todos) => {
+      this.todos = todos
+    })
+   }
 
   trackById(i: number, todo: Todo) {
     return todo.id;
