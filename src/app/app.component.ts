@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TodoComponent } from './components/todo/todo.component';
 import { Todo } from './types/todo';
-import { TodoFormComponent } from "./components/todo-form/todo-form.component";
+import { TodoFormComponent } from './components/todo-form/todo-form.component';
 import { TodosService } from './services/todos.service';
 
 @Component({
@@ -14,68 +14,48 @@ import { TodosService } from './services/todos.service';
 })
 export class AppComponent implements OnInit {
   _todos: Todo[] = [];
-  activeTodos: Todo[] = []
+  activeTodos: Todo[] = [];
 
-  get todos(){
-    return this._todos
+  get todos() {
+    return this._todos;
   }
 
-  set todos(todos: Todo[]){
-    if(todos === this._todos){
-      return
+  set todos(todos: Todo[]) {
+    if (todos === this._todos) {
+      return;
     }
 
-    this._todos = todos
-    this.activeTodos = this._todos.filter((todo) => !todo.completed)
+    this._todos = todos;
+    this.activeTodos = this._todos.filter((todo) => !todo.completed);
   }
 
-  constructor(
-    private todosServices: TodosService
-  ){}
+  constructor(private todosServices: TodosService) {}
 
   ngOnInit(): void {
-    this.todosServices.getTodos().subscribe((todos) => {
-      this.todos = todos
-    })
-   }
+    this.todosServices.todos$.subscribe((todos) => {
+      this.todos = todos;
+    });
+  }
 
   trackById(i: number, todo: Todo) {
     return todo.id;
   }
 
-  addTodo(newTitle: string){
-    const newTodo: Todo = {
-      id: Date.now(),
-      title: newTitle,
-      completed: false,
-    };
-
-    this.todos = [ ...this.todos, newTodo ];
+  addTodo(newTitle: string) {
+    this.todosServices.createTodo(newTitle).subscribe();
   }
 
-  toggleTodo(todoId: number){
-    this.todos = this.todos.map(todo => {
-      if(todo.id !== todoId){
-        return todo
-      }
-
-      return { ... todo, completed: !todo.completed }
-    })
+  toggleTodo(todo: Todo) {
+    this.todosServices
+      .updateTodo({ ...todo, completed: !todo.completed })
+      .subscribe();
   }
 
-  renameTodo(todoId: number, title: string){
-    this.todos = this.todos.map(todo => {
-      if(todo.id !== todoId){
-        return todo
-      }
-
-      return { ... todo, title }
-    })
+  renameTodo(todo: Todo, title: string) {
+    this.todosServices.updateTodo({ ...todo, title }).subscribe();
   }
 
-  deleteTodo(todoId: number){
-    this.todos = this.todos.filter(todo => todo.id !== todoId)
-
+  deleteTodo(todo: Todo) {
+    this.todosServices.deleteTodo(todo).subscribe();
   }
-
 }
