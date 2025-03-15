@@ -2,54 +2,66 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API } from '../constants/constants';
 import { Todo } from '../types/todo';
-import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, tap, withLatestFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodosService {
-  refresh$$ = new BehaviorSubject(null);
-  todos$: Observable<Todo[]>;
+  private todos$$ = new BehaviorSubject<Todo[]>([]);
 
-  constructor(private http: HttpClient) {
-    this.todos$ = this.refresh$$.pipe(switchMap(() => this.getTodos()));
-  }
+  todos$ = this.todos$$.asObservable();
 
-  getTodos() {
-    return this.http.get<Todo[]>(`${API.url}/todos?userId=${API.userId}`);
+  constructor(
+    private http: HttpClient,
+  ) { }
+
+  loadTodos() {
+    return this.http.get<Todo[]>(`${API.url}/todos?userId=${API.userId}`)
+      .pipe(
+        tap(todos => {
+          this.todos$$.next(todos)
+        }),
+      );
   }
 
   createTodo(title: string) {
-    return this.http
-      .post<Todo>(`${API.url}/todos`, {
-        title,
-        userId: API.userId,
-        completed: false,
-      })
-      .pipe(tap(() => this.refresh$$.next(null)));
-    // .pipe(
-    //   withLatestFrom(this.todos$$),
-    //   tap(([createdTodo, todos]) => {
-    //     this.todos$$.next(
-    //       [...todos, createdTodo]
-    //     );
-    //   }),
-    // )
+    return this.http.post<Todo>(`${API.url}/todos`, {
+      title,
+      userId: API.userId,
+      completed: false,
+    })
+      .pipe(
+        withLatestFrom(this.todos$$),
+        tap(([createdTodo, todos]) => {
+          this.todos$$.next(
+            [...todos, createdTodo]
+          );
+        }),
+      )
   }
 
-  updateTodo(todo: Todo) {
-    return this.http.patch<Todo>(`${API.url}/todos/${todo.id}`, todo).pipe(
-      tap(() => {
-        this.refresh$$.next(null);
-      })
-    );
+  updateTodo({ id, ...data }: Todo) {
+    return this.http.patch<Todo>(`${API.url}/todos/${id}`, data)
+      .pipe(
+        withLatestFrom(this.todos$$),
+        tap(([updatedTodo, todos]) => {
+          this.todos$$.next(
+            todos.map(todo => todo.id === id ? updatedTodo : todo)
+          );
+        }),
+      )
   }
 
-  deleteTodo(todo: Todo) {
-    return this.http.delete<Todo>(`${API.url}/todos/${todo.id}`).pipe(
-      tap(() => {
-        this.refresh$$.next(null);
-      })
-    );
+  deleteTodo({ id }: Todo) {
+    return this.http.delete<Todo>(`${API.url}/todos/${id}`)
+      .pipe(
+        withLatestFrom(this.todos$$),
+        tap(([_, todos]) => {
+          this.todos$$.next(
+            todos.filter(todo => todo.id !== id),
+          );
+        }),
+      )
   }
 }
