@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TodoComponent } from './components/todo/todo.component';
 import { Todo } from './types/todo';
 import { TodoFormComponent } from './components/todo-form/todo-form.component';
@@ -10,10 +10,9 @@ import { TodosService } from './services/todos.service';
   imports: [CommonModule, TodoComponent, TodoFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  _todos: Todo[] = [];
+  private _todos: Todo[] = [];
   activeTodos: Todo[] = [];
 
   get todos() {
@@ -35,6 +34,8 @@ export class AppComponent implements OnInit {
     this.todosServices.todos$.subscribe((todos) => {
       this.todos = todos;
     });
+
+    this.todosServices.loadTodos().subscribe()
   }
 
   trackById(i: number, todo: Todo) {
