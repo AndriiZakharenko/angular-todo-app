@@ -1,17 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { TodoComponent } from './components/todo/todo.component';
 import { Todo } from './types/todo';
-import { TodoFormComponent } from './components/todo-form/todo-form.component';
 import { TodosService } from './services/todos.service';
-import { MessageComponent } from './components/message/message.component';
 import { MessageService } from './services/message.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, TodoComponent, TodoFormComponent, MessageComponent],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   private _todos: Todo[] = [];
@@ -32,18 +31,18 @@ export class AppComponent implements OnInit {
   }
 
   constructor(
-    private todosServices: TodosService,
+    private todosService: TodosService,
     private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
-    this.todosServices.todos$.subscribe((todos) => {
+    this.todosService.todos$.subscribe((todos) => {
       this.todos = todos;
     });
 
-    this.todosServices.loadTodos().subscribe({
+    this.todosService.loadTodos().subscribe({
       error: () => {
-        this.messageService.showMessage('Unable to load todos')
+        this.messageService.showMessage('Unable to load todos');
       },
     });
   }
@@ -53,35 +52,33 @@ export class AppComponent implements OnInit {
   }
 
   addTodo(newTitle: string) {
-    this.todosServices.createTodo(newTitle).subscribe({
+    this.todosService.createTodo(newTitle).subscribe({
       error: () => {
-        this.messageService.showMessage('Unable to load todos')
+        this.messageService.showMessage('Unable to add a todo');
       },
     });
   }
 
   toggleTodo(todo: Todo) {
-    this.todosServices
-      .updateTodo({ ...todo, completed: !todo.completed })
-      .subscribe({
-        error: () => {
-          this.messageService.showMessage('Unable to load todos')
-        },
-      });
+    this.todosService.updateTodo({ ...todo, completed: !todo.completed }).subscribe({
+      error: () => {
+        this.messageService.showMessage('Unable to toggle a todo');
+      },
+    });
   }
 
   renameTodo(todo: Todo, title: string) {
-    this.todosServices.updateTodo({ ...todo, title }).subscribe({
+    this.todosService.updateTodo({ ...todo, title }).subscribe({
       error: () => {
-        this.messageService.showMessage('Unable to load todos')
+        this.messageService.showMessage('Unable to rename a todo');
       },
     });
   }
 
   deleteTodo(todo: Todo) {
-    this.todosServices.deleteTodo(todo).subscribe({
+    this.todosService.deleteTodo(todo).subscribe({
       error: () => {
-        this.messageService.showMessage('Unable to load todos')
+        this.messageService.showMessage('Unable to delete a todo');
       },
     });
   }
