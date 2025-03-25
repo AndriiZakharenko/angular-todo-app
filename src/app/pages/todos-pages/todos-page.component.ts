@@ -11,13 +11,14 @@ import { TodoFormComponent } from '../../components/todo-form/todo-form.componen
 import { TodoComponent } from '../../components/todo/todo.component';
 import { MessageComponent } from '../../components/message/message.component';
 import { TodosService } from '../../services/todos.service';
+import { FilterComponent } from "../../components/filter/filter.component";
 
 @Component({
   selector: 'app-todos-page',
   templateUrl: './todos-page.component.html',
   styleUrls: ['./todos-page.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, TodoFormComponent, TodoComponent, MessageComponent],
+  imports: [CommonModule, FormsModule, TodoFormComponent, TodoComponent, MessageComponent, FilterComponent],
 })
 export class TodosPageComponent implements OnInit {
   todos$!: Observable<Todo[]>;
@@ -34,23 +35,23 @@ export class TodosPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.todos$ = this.todosService.todos$;
-
+  
     this.activeTodos$ = this.todos$.pipe(
-      distinctUntilChanged(),
       map(todos => todos.filter(todo => !todo.completed))
     );
-
+  
     this.completedTodos$ = this.todos$.pipe(
       map(todos => todos.filter(todo => todo.completed))
     );
-
+  
     this.activeCount$ = this.activeTodos$.pipe(
       map(todos => todos.length)
     );
-
-    this.visibleTodos$ = this.route.params.pipe(
-      switchMap(params => {
-        switch (params['status'] as Status) {
+  
+    this.visibleTodos$ = this.route.paramMap.pipe(
+      map(params => {
+        const status = params.get('status') as Status;
+        switch (status) {
           case 'active':
             return this.activeTodos$;
           case 'completed':
@@ -58,13 +59,15 @@ export class TodosPageComponent implements OnInit {
           default:
             return this.todos$;
         }
-      })
+      }),
+      switchMap(todos => todos)
     );
-
+  
     this.todosService.loadTodos().subscribe({
       error: () => this.messageService.showMessage('Unable to load todos'),
     });
   }
+  
 
   trackById = (i: number, todo: Todo) => todo.id;
 
