@@ -1,7 +1,14 @@
-<nav>
-  <a routerLink="/todos">Todos</a>
-  <br>
-  <a routerLink="/about">About</a>
+<nav class="navbar is-primary has-background-grey-lighter">
+  <div class="navbar-menu">
+    <div class="navbar-start">
+      <a routerLink="/todos" routerLinkActive="active-link" class="navbar-item">Todos</a>
+      <a routerLink="/about" routerLinkActive="active-link" class="navbar-item">About</a>
+    </div>
+  </div>
 </nav>
 
-<router-outlet></router-outlet>
+<section class="section">
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</section>
