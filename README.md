@@ -1,4 +1,4 @@
-# **AngularTODO App ✅**  
+# **Angular TODO App ✅**  
 
 ## **Description ✨**  
 A modern **task management application** that allows users to **add, delete, and manage TODOs** efficiently. Built with **Angular**, it ensures a smooth and reactive user experience with real-time updates.  
