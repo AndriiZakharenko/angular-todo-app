@@ -1,9 +1,0 @@
-{
-  "routes": {
-    "/angular-todo-app": {},
-    "/angular-todo-app/about": {},
-    "/angular-todo-app/todos/active": {},
-    "/angular-todo-app/todos/all": {},
-    "/angular-todo-app/todos/completed": {}
-  }
-}
