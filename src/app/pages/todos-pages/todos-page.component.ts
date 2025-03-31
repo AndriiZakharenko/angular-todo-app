@@ -26,6 +26,7 @@ export class TodosPageComponent implements OnInit {
   completedTodos$!: Observable<Todo[]>;
   activeCount$!: Observable<number>;
   visibleTodos$!: Observable<Todo[]>;
+  showTodos = true;
 
   constructor(
     private todosService: TodosService,
@@ -93,5 +94,9 @@ export class TodosPageComponent implements OnInit {
     this.todosService.deleteTodo(todo).subscribe({
       error: () => this.messageService.showMessage('Unable to delete a todo'),
     });
+  }
+
+  toggleTodosVisibility() {
+    this.showTodos = !this.showTodos;
   }
 }
