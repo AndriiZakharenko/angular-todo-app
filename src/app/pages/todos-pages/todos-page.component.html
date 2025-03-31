@@ -3,12 +3,16 @@
   
     <div class="todoapp__content">
       <header class="todoapp__header">
-        <button class="todoapp__toggle-all active"></button>
+        <button 
+          class="todoapp__toggle-all" 
+          [class.active]="showTodos" 
+          (click)="toggleTodosVisibility()">
+        </button>
   
         <app-todo-form (save)="addTodo($event)"></app-todo-form>
       </header>
   
-      <section class="todoapp__main">
+      <section class="todoapp__main" *ngIf="showTodos">
         <app-todo
           *ngFor="let todo of visibleTodos$ | async; let i = index; trackBy: trackById"
           [todo]="todo"
