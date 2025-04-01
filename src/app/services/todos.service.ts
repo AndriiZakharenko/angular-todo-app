@@ -64,4 +64,13 @@ export class TodosService {
         }),
       )
   }
+
+  clearAllTodos() {
+    return this.http.delete(`${API.url}/todos?userId=${API.userId}`)
+      .pipe(
+        tap(() => {
+          this.todos$$.next([]);
+        }),
+      );
+  }
 }

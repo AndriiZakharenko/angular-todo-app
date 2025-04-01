@@ -99,4 +99,10 @@ export class TodosPageComponent implements OnInit {
   toggleTodosVisibility() {
     this.showTodos = !this.showTodos;
   }
+
+  clearAllTodos() {
+    this.todosService.clearAllTodos().subscribe({
+      error: () => this.messageService.showMessage('Unable to clear all todos'),
+    });
+  }
 }
